@@ -1,11 +1,13 @@
 ## Development Fund Proposal
 
-**Author:** [TODO: legal entity, e.g. Hyprearn Labs Ltd.]
+**Author:** Namas Labs Private Ltd, Location: Singapore
 **Status:** Draft
 **Created:** 2026-08-19
 **Label:** defi-protocols
 
-**[Champion](https://github.com/canton-foundation/canton-dev-fund/blob/main/sig-directory.md):** [TODO: targeting the **DeFi Protocols & Liquidity** SIG. Primary approach: Gabi Tuinaite (BitSafe), who champions PR #99 and therefore has direct interest in the layers above that standard fitting together. Co-champion candidate: Aki Balogh (BitSafe).]
+**[Champion](https://github.com/canton-foundation/canton-dev-fund/blob/main/sig-directory.md):** **
+**Project Duration:** 1 year(6 months building, 6 months adoption)
+**Label:** defi-liquidity
 
 ---
 
@@ -44,6 +46,59 @@ Plus, to demonstrate and validate the layer:
 This is a single objective: the safety layer for standard-conformant vaults, with the minimum set of strategies needed to prove it works under real conditions. It is explicitly **not** a proposal to fund Hyprearn's operated vault business; the operated deployment exists to demonstrate the framework and to satisfy the Fund's preference for adoption evidence over artifacts.
 
 ### 2. Implementation Mechanics
+
+The layer sits between the tokenized vault standard, which we adopt, and the strategies that hold the assets. The four blue components are what this grant delivers and publishes under MIT; the grey Vault is the adopted standard, the green nodes are the two reference strategies, and the tan node is state that exists off-ledger.
+
+```mermaid
+flowchart TB
+    DEP(["Depositor"])
+    MGR(["Strategy manager"])
+    KEEP(["Keeper"])
+    SOLV(["Solver"])
+
+    VAULT["<b>Vault</b><br/>share accounting, deposit and redeem<br/>CIP-0056 share tokens"]
+
+    MAND["<b>Strategy Mandate</b><br/>permitted typed choices and argument<br/>constraints, scoped per manager, revocable"]
+    BOP["<b>Bounded Operator</b><br/>frequency limits, slippage limits"]
+    QUEUE["<b>Redemption Queue</b><br/>discount, maturity, deadline, per-asset caps"]
+    VAL["<b>Valuation Contract</b><br/>update delay, deviation bounds<br/>auto-pause, high-water-mark fees"]
+
+    CCLOCK["<b>Pooled CC locking</b><br/>CIP-0116 Featured App status"]
+    DNEUT["<b>Delta-neutral funding rate</b><br/>hedge composition disclosed on-ledger"]
+
+    POS[/"Off-ledger position state<br/>60-day locked CC, hedge legs across venues"/]
+
+    DEP -->|deposit / redeem| VAULT
+    VAULT -->|beyond liquid buffer| QUEUE
+    QUEUE -->|matured request| SOLV
+    SOLV -->|payout at agreed discount| DEP
+
+    MGR -->|typed choice| MAND
+    KEEP --> BOP
+    BOP -->|narrowed authority| MAND
+    VAULT -->|vault authority AND live mandate| MAND
+    VAULT -.->|reads price, pause state| VAL
+
+    MAND -->|authorised action| CCLOCK
+    MAND -->|authorised action| DNEUT
+    CCLOCK --> POS
+    DNEUT --> POS
+    POS -->|value submitted| VAL
+
+    classDef actor fill:#ffffff,stroke:#5b6472,stroke-width:1px,color:#1f2430
+    classDef adopted fill:#e8edf5,stroke:#5b6472,stroke-width:1.5px,color:#1f2430
+    classDef grant fill:#dbe7ff,stroke:#2f5fd0,stroke-width:2px,color:#12224a
+    classDef strat fill:#e6f2e8,stroke:#2f7d4f,stroke-width:1.5px,color:#123222
+    classDef ext fill:#f5f1e4,stroke:#8a7a3f,stroke-width:1.5px,color:#3a3211
+
+    class DEP,MGR,KEEP,SOLV actor
+    class VAULT adopted
+    class MAND,BOP,QUEUE,VAL grant
+    class CCLOCK,DNEUT strat
+    class POS ext
+```
+
+Two paths carry the safety properties. **Valuation:** position values that cannot be read from the ledger enter through a contract that bounds them, rate-limits them, and pauses the vault rather than accepting a rate outside its band. **Authority:** no vault asset moves without both the vault's own authority and a live mandate permitting that specific action, whether the actor is a human manager or a keeper operating under a further-narrowed Bounded Operator. The Redemption Queue exists because the flagship strategy holds a position with a 60-day unlock, so a depositor who needs liquidity sooner exits by pricing that urgency to a solver rather than forcing a distressed unwind.
 
 #### 2.0 What we adopt rather than build
 
@@ -116,11 +171,10 @@ No backward compatibility impact. All deliverables are new, opt-in Daml packages
 
 ## Partners and Users
 
-[TODO: list current Hyprearn partners, deployments and users here, with whatever is concrete and verifiable: named partner applications, vaults or accounts operated today, capital under management, and any teams that have committed to consuming the safety layer once it ships. The committee treats existing users and named partners as the strongest evidence that the layer will be adopted rather than shelved, so this section carries real weight. Where a partner has not agreed to be named publicly, state the relationship in general terms rather than omitting it.]
-
-- **Current partners:** [TODO]
-- **Current users / deployments:** [TODO]
-- **Committed adopters of the safety layer:** [TODO]
+Below are the current partners working with us to implement the solution, and protocols who will be the users for the solution.
+- **Current partners:** ***
+- **Current protocols / deployments:** ***
+- **Committed adopters of the safety layer:** ***
 
 ---
 
@@ -140,7 +194,7 @@ No backward compatibility impact. All deliverables are new, opt-in Daml packages
 - **Estimated Delivery:** 2 months from Milestone 1
 - **Focus:** CC-locking strategy (own-party and on-behalf-of-partner modes); delta-neutral strategy implemented in Daml for the first time as a pooled, mandate-governed strategy, ported from Hyprearn's existing per-account off-ledger operation, with explicit on-ledger hedge-composition disclosure; third-party security audit of Milestones 1 and 2 scope, with remediation.
 - **Deliverables / Value Metrics:** Both strategies live on TestNet under a reference vault; audit report and remediation published; CIP amendment submitted to the tokenized vault standard covering redemption semantics for long-cooldown positions.
-- *[TODO: name intended auditors and audit scope in NSLOC, and state explicitly how auditors are paid. PR #99's committee feedback shows reviewers ask for this directly, so pre-empt it.]*
+- **Auditors:** ***
 
 ### Milestone 3: MainNet reference deployment
 - **Estimated Delivery:** 2 months from Milestone 2
@@ -150,7 +204,7 @@ No backward compatibility impact. All deliverables are new, opt-in Daml packages
 ### Milestone 4: Ecosystem adoption
 - **Estimated Delivery:** 6 months from Milestone 3
 - **Focus:** Onboarding other teams onto the framework; strategy-authoring documentation and support; contributing components upstream where the ecosystem standard is the better home.
-- **Deliverables / Value Metrics:** **N independently-operated vaults, run by teams other than Hyprearn, using at least one component of this layer**, and **at least one strategy implementation authored by a third party** against the mandate interface. [TODO: set N with the Champion; this is the primary success metric of the whole grant.]
+- **Deliverables / Value Metrics:** **N independently-operated vaults, run by teams other than Hyprearn, using at least one component of this layer**, and **at least one strategy implementation authored by a third party** against the mandate interface. 
 
 ---
 
@@ -168,14 +222,14 @@ Evaluated by the Tech & Ops Committee on:
 
 ## Funding
 
-**Total Funding Request:** **200,000 USD**
+**Total Funding Request:** **2,000,000 CC**
 
 ### Payment Breakdown by Milestone
-- Milestone 0 (Proposal acceptance): **20,000 USD** upon community approval of this proposal
-- Milestone 1 (Safety layer core): **40,000 USD** upon committee acceptance
-- Milestone 2 (Reference strategies and audit): **40,000 USD** upon committee acceptance
-- Milestone 3 (MainNet reference deployment): **40,000 USD** upon committee acceptance
-- Milestone 4 (Ecosystem adoption): **60,000 USD** upon final acceptance
+- Milestone 0 (Proposal acceptance): **200,000 CC** upon community approval of this proposal
+- Milestone 1 (Safety layer core): **400,000 CC** upon committee acceptance
+- Milestone 2 (Reference strategies and audit): **400,000 CC** upon committee acceptance
+- Milestone 3 (MainNet reference deployment): **400,000 CC** upon committee acceptance
+- Milestone 4 (Ecosystem adoption): **600,000 CC** upon final acceptance
 
 Adoption-directed work (Milestone 4 in full, plus the integration-support and documentation components of Milestones 1 and 3) accounts for approximately **35–40%** of the total, per committee guidance that 30–50% should drive ecosystem adoption.
 
@@ -185,14 +239,14 @@ Adoption-directed work (Milestone 4 in full, plus the integration-support and do
 
 Two distinct artifacts:
 
-- **The safety layer** (Valuation Contract, Strategy Mandate, Redemption Queue, Bounded Operators, conformance suite) is published by [TODO: entity] under the **MIT license** as a public good. [TODO: entity] commits to maintaining it for a minimum of **12 months** following Milestone 2 acceptance (bug fixes, dependency updates, and compatibility with changes to the tokenized vault standard and CIP-0056), funded from protocol operations, with no further grant requested for maintenance.
+- **The safety layer** (Valuation Contract, Strategy Mandate, Redemption Queue, Bounded Operators, conformance suite) is published by Namas Labs Private Ltd under the **MIT license** as a public good. Namas Labs Private Ltd commits to maintaining it for a minimum of **12 months** following Milestone 2 acceptance (bug fixes, dependency updates, and compatibility with changes to the tokenized vault standard and CIP-0056), funded from protocol operations, with no further grant requested for maintenance.
 - **Hyprearn's operated vault**, the strategy parameterisation, allocation policy and operational tooling specific to our own deployment, remains proprietary. The strategy *interfaces* and the two reference strategy implementations delivered under this grant are MIT.
 
 ---
 
 ## Co-Marketing
 
-Upon each milestone release, [TODO: entity] will collaborate with the Foundation on:
+Upon each milestone release, Namas Labs Private Ltd will collaborate with the Foundation on:
 - Joint announcement of each component release
 - A technical deep-dive on safe vault design for Canton, covering valuation manipulation resistance, bounded manager authority, and redemption under long unwind periods
 - Developer-facing material on authoring a strategy against the mandate interface
@@ -210,8 +264,6 @@ Under CIP-0116, every Featured App must continuously lock 5,000,000 CC against i
 
 The flagship strategy and the safety layer are therefore the same argument. Canton's most valuable native yield opportunity is exactly the one that requires this infrastructure to exist.
 
-[TODO: quantify reach with the SIG: the number of current Featured Apps plus applications in the approval pipeline, and an estimate of what share could realistically pool locking capital rather than sourcing it individually. This is the single most useful number in the proposal; the Fund's template explicitly asks for quantified expected reach.]
-
 ---
 
 ## Rationale
@@ -222,6 +274,6 @@ The flagship strategy and the safety layer are therefore the same argument. Cant
 
 **Why CC locking as the flagship rather than a broader strategy set.** It has quantified, mandatory, non-speculative demand created by approved network policy; it has no equivalent on any other network, so no existing implementation can simply be imported; and it exercises every component of the safety layer at once. A strategy set chosen for breadth would demonstrate less with more work. The concentration risk is that tokenomics policy changes, addressed by the fact that the safety layer is strategy-agnostic and retains its value regardless of what the flagship strategy holds.
 
-**Why not simply contribute these components into PR #99's scope.** We offered to; [TODO: record the outcome of that conversation here: if they decline, that is the strongest possible justification for a separate proposal, and if they accept, this proposal should be restructured or withdrawn. Do not file before having this conversation.]
+<!-- **Why not simply contribute these components into PR #99's scope.** We offered to; [TODO: record the outcome of that conversation here: if they decline, that is the strongest possible justification for a separate proposal, and if they accept, this proposal should be restructured or withdrawn. Do not file before having this conversation.] -->
 
 **On prior art.** The four-component separation of custody, valuation, bounded authority and queued redemption is an established pattern in vault design across the industry, and we make no claim to originating it. The contribution here is its re-derivation for Canton's authorization and privacy model, where mandates are structural rather than verified, valuation is disclosed to entitled parties by construction, and the dominant strategy is one no other network has.
