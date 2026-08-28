@@ -171,10 +171,37 @@ No backward compatibility impact. All deliverables are new, opt-in Daml packages
 
 ## Partners and Users
 
-Below are the current partners working with us to implement the solution, and protocols who will be the users for the solution.
-- **Current partners:** ***
-- **Current protocols / deployments:** ***
-- **Committed adopters of the safety layer:** ***
+This layer is not being specified in isolation. Three partners work with us on the standard it builds on, the features it exposes and its route to adoption, and two protocols are already committed to building on top of it. Between them they cover both sides of the test that matters for shared infrastructure: something has to depend on the interface below us, and something has to be built on the interface above us.
+
+These are working relationships agreed between the teams rather than executed contracts. The closest technical collaboration is with Mystic Finance and Cashen, with whom we will implement the architecture directly.
+
+### Partners
+
+**[Mystic Finance](https://mysticfinance.xyz/)** is the team behind [PR #99](https://github.com/canton-foundation/canton-dev-fund/pull/99), the curated lending and tokenized vault standard, and operates curated vaults in which third-party curators allocate single-asset deposits across isolated markets under predefined risk parameters.
+
+*How we collaborate:* we build our vaults directly on their standard rather than proposing a competing interface. Share accounting, deposit and redeem entry points and CIP-0056 share-token issuance are taken from PR #99, we contribute a conformance test suite back to it, and where our components need behaviour the standard does not yet specify, principally how `Vault_MaxWithdraw` should answer for a vault holding a long-cooldown position, we raise it as an amendment to that CIP rather than fork the interface. We expect to be the standard's first named external consumer.
+
+**[Noves](https://noves.fi/)** is a digital-asset data platform that classifies and reconciles on-chain and private transaction data into audit-ready form for institutions, with coverage across more than 120 chains including Canton.
+
+*How we collaborate:* data partner on Canton and a route to ecosystem adoption. Noves already supports Canton and indexes chain data as part of its general coverage, which is the precondition for what we want from the partnership: every valuation submission, mandate exercise and queue settlement in this layer is recorded on-ledger by construction, and turning that record into position, performance and reconciliation reporting is what makes a vault built on this layer legible to institutional depositors. The layer produces the auditable history; the data partnership is what makes it consumable.
+
+**[Avicenne Studio](https://www.avicenne.studio/)** is a Web3 development studio based in Paris and Dubai that takes products from specification and design through full-stack delivery, with prior work including Usual and Linea Hub.
+
+*How we collaborate:* partner on feature finalisation and ecosystem adoption. They work with us on specifying the safety layer's interfaces and on the integration path other teams follow when adopting a single component, which is the deliverable Milestone 1 is judged on and the precondition for the third-party adoption Milestone 4 requires.
+
+### Protocols building on the layer
+
+**[Cashen](https://www.cashen.cc/)** is an institutional marketplace on Canton for CC locking, matching suppliers of Canton Coin with Featured Apps meeting CIP-0116 and Super Validators meeting CIP-0105, with suppliers earning a fixed yield while retaining custody and taking no principal credit risk. Cashen is the team behind [PR #328, the Featured App Marketplace](https://github.com/canton-foundation/canton-dev-fund/pull/328).
+
+*How we integrate:* Cashen builds the CC-locking mechanism that the flagship reference strategy uses, and partners with us on extending the same mandate-governed pattern to further token strategies. This matters for delivery risk and for scope. The locking primitives come from a team already operating production CC-locking Daml with completed third-party audits, so the flagship strategy composes proven components rather than introducing new ones. It also settles what would otherwise read as an overlap between two proposals addressing the same CIP-0116 capital demand: PR #328 matches individual suppliers to individual applications, this proposal pools capital under a mandate-governed vault, and we are building the two together rather than in parallel.
+
+**[Tempora Labs](https://temporalabs.com/)** builds autonomous agentic infrastructure for portfolio management, where agents rebalance and manage allocations from natural-language intents within user-defined risk parameters, with an audit trail behind every action.
+
+*How we integrate:* Tempora enables agentic management of vaults built on this layer. This is the clearest case for why Bounded Operators exist. An autonomous agent is exactly the actor that should hold narrow, revocable, frequency-limited and slippage-limited authority rather than a full manager mandate, and under this design what the agent may do is bounded by the contract rather than by the agent's own judgement or by the correctness of its prompt. Agentic vault management is a capability the safety layer makes safe to offer, and Tempora is the first protocol building it.
+
+### Hyprearn's current operations
+
+**[TO BE COMPLETED BEFORE FILING: accounts served, capital under management, and time in operation for the delta-neutral strategy Hyprearn runs today.]**
 
 ---
 
@@ -246,7 +273,7 @@ Two distinct artifacts:
 
 ## Co-Marketing
 
-Upon each milestone release, Namas Labs Private Ltd will collaborate with the Foundation on:
+Each partner named in §Partners and Users has agreed to support co-marketing of this work. Upon each milestone release, Namas Labs Private Ltd will collaborate with the Foundation, and with those partners where relevant, on:
 - Joint announcement of each component release
 - A technical deep-dive on safe vault design for Canton, covering valuation manipulation resistance, bounded manager authority, and redemption under long unwind periods
 - Developer-facing material on authoring a strategy against the mandate interface
