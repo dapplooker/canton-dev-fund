@@ -201,7 +201,7 @@ These are working relationships agreed between the teams rather than executed co
 
 ### Hyprearn's current operations
 
-**[TO BE COMPLETED BEFORE FILING: accounts served, capital under management, and time in operation for the delta-neutral strategy Hyprearn runs today.]**
+Hyprean currenlty have 3000+ signed up users, 500k+ in deposits in their delta neutral vault alone across multiple perp dexes. 
 
 ---
 
