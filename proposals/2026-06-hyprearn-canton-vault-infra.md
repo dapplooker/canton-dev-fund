@@ -1,12 +1,12 @@
 ## Development Fund Proposal
 
-**Author:** Namas Labs Private Ltd, Location: Singapore
-**Status:** Draft
-**Created:** 2026-08-19
+**Author:** Namas Labs Private Ltd \
+**Status:** Draft \
+**Created:** 2026-08-19 \
 **Label:** defi-protocols
 
-**[Champion](https://github.com/canton-foundation/canton-dev-fund/blob/main/sig-directory.md):** **
-**Project Duration:** 1 year(6 months building, 6 months adoption)
+**[Champion](https://github.com/canton-foundation/canton-dev-fund/blob/main/sig-directory.md):** ** \
+**Project Duration:** 1 year(6 months building, 6 months adoption) \
 **Label:** defi-liquidity
 
 ---
@@ -213,12 +213,12 @@ Hyprean currenlty have 3000+ signed up users, 500k+ in deposits in their delta n
 - **Deliverables / Value Metrics:** Proposal approved by the community and the grant agreement executed.
 
 ### Milestone 1: Safety layer core
-- **Estimated Delivery:** 2 months from approval
+- **Estimated Delivery:** 1 months from approval
 - **Focus:** Published design specification and threat model for the safety layer, written against the tokenized vault standard interface (PR #99), covering valuation manipulation, manager overreach, keeper compromise and redemption stress. Valuation Contract (bounds, delay, auto-pause, high-water-mark fee accrual); Strategy Mandate with per-manager scoping and typed argument constraints; Redemption Queue with discount/maturity/deadline settlement; Bounded Operator pattern. Conformance test suite for the tokenized vault standard. Full documentation.
 - **Deliverables / Value Metrics:** All four components running against the vault standard interface on DevNet; MIT-licensed repository published; integration guide sufficient for a third party to adopt a component without our involvement; **at least two other Canton teams publicly commit to consuming at least one component.**
 
 ### Milestone 2: Reference strategies and audit
-- **Estimated Delivery:** 2 months from Milestone 1
+- **Estimated Delivery:** 1 months from Milestone 1
 - **Focus:** CC-locking strategy (own-party and on-behalf-of-partner modes); delta-neutral strategy implemented in Daml for the first time as a pooled, mandate-governed strategy, ported from Hyprearn's existing per-account off-ledger operation, with explicit on-ledger hedge-composition disclosure; third-party security audit of Milestones 1 and 2 scope, with remediation.
 - **Deliverables / Value Metrics:** Both strategies live on TestNet under a reference vault; audit report and remediation published; CIP amendment submitted to the tokenized vault standard covering redemption semantics for long-cooldown positions.
 - **Auditors:** ***
