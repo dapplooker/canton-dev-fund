@@ -300,7 +300,7 @@ Hyprearn (a product of dapplooker) currently has 4,000+ signed-up users and appr
 
 ### Milestone 0: Proposal acceptance and mobilisation
 - **Estimated Delivery:** On execution of the grant agreement
-- **Focus:** Mobilisation. This milestone releases the initial tranche to secure the audit engagement with QuillAudits and to begin integration work with Mystic Finance and Cashen, so that Milestone 1 starts with the audit slot and partner interfaces committed.
+- **Focus:** Mobilisation. This milestone releases the initial tranche to secure the audit engagement with QuillAudits and other auditors and to begin integration work with Mystic Finance and Cashen, so that Milestone 1 starts with the audit slot and partner interfaces committed.
 - **Deliverables / Value Metrics:** Grant agreement executed; audit engagement letter signed with QuillAudits; integration kick-off with Mystic Finance and Cashen confirmed on the PR.
 
 ### Milestone 1: Safety layer core
