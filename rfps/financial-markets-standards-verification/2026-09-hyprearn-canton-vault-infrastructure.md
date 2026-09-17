@@ -1,15 +1,16 @@
 ## Development Fund Proposal
 
-**Organization:** Namas Labs Private Ltd (HyprEarn)
-**Author / Primary Contact:** Abhay ([github.com/abhayait](https://github.com/abhayait)), Rohit ([github.com/web3cook](https://github.com/web3cook))
-**Status:** Submitted
-**Created:** 2026-09-16
-**Updated:** 2026-09-17
-**Proposal Type:** RFP-aligned
+**Organization:** Namas Labs Private Ltd (HyprEarn) \
+**Author / Primary Contact:** Abhay ([github.com/abhayait](https://github.com/abhayait)), Rohit ([github.com/web3cook](https://github.com/web3cook)) \
+**Status:** Submitted \
+**Created:** 2026-09-16 \
+**Updated:** 2026-09-17 \
+**Proposal Type:** RFP-aligned \
 **RFP / Roadmap Area:** RFP 13, Payments and DeFi, under Financial Markets, Standards & Verification ([2026-2028 roadmap](https://github.com/canton-foundation/canton-dev-fund/blob/main/2026-2028-strategic-roadmap.md))
-**Champion:** Luke Farrell, Cashen (@cashenLuke)
-**Total Funding Request:** 3,000,000 CC
-**Project Duration:** 3 to 5 months build, plus 6 months adoption window
+
+**Champion:** Luke Farrell, Cashen (@cashenLuke) \
+**Total Funding Request:** 3,000,000 CC \
+**Project Duration:** 3 to 5 months build, plus 6 months adoption window \
 **Label:** defi-liquidity
 
 ---
